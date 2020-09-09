@@ -50,7 +50,7 @@ class MainFragment : Fragment() {
             "uniform sampler2D texture;" +
             "uniform sampler2D texture1;" +
             "void main() { " +
-            "    gl_FragColor = texture2D(texture, textureCoordinate) + texture2D(texture1, textureCoordinate);" +
+            "    gl_FragColor = texture2D(texture, textureCoordinate)+texture2D(texture1, textureCoordinate);" +
             "}"
 
     lateinit var mGifTexImage2D: GifTexImage2D
@@ -130,6 +130,8 @@ class MainFragment : Fragment() {
             texId1 = createTex(mGifTexImage2D, 0)
             texId2 = createTex(mGifTexImage2D1, 1)
 
+            glUniform1i(textureLocation, 0)
+            glUniform1i(textureLocation1, 1)
         }
 
         private fun createTex(gif: GifTexImage2D, level: Int): Int {
@@ -137,11 +139,12 @@ class MainFragment : Fragment() {
             glGenTextures(1, texNames, 0)
             glBindTexture(GL_TEXTURE_2D, texNames[0])
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
             glTexImage2D(
                     GL_TEXTURE_2D,
-                    level,
+                    0,
                     GL_RGBA,
                     gif.getWidth(),
                     gif.getHeight(),
@@ -166,15 +169,11 @@ class MainFragment : Fragment() {
         override fun onDrawFrame(gl: GL10) {
             glActiveTexture(GL_TEXTURE0)
             glBindTexture(GL_TEXTURE_2D, texId1)
-            mGifTexImage2D.glTexSubImage2D(GL_TEXTURE_2D,0)
+            mGifTexImage2D.glTexSubImage2D(GL_TEXTURE_2D, 0)
 
             glActiveTexture(GL_TEXTURE1)
             glBindTexture(GL_TEXTURE_2D, texId2)
-            mGifTexImage2D1.glTexSubImage2D(GL_TEXTURE_2D,1)
-
-            glUniform1i(textureLocation, 0)
-
-            glUniform1i(textureLocation1, 1)
+            mGifTexImage2D1.glTexSubImage2D(GL_TEXTURE_2D, 0)
 
             glDrawArrays(GL_TRIANGLE_STRIP, 0, 4)
         }
