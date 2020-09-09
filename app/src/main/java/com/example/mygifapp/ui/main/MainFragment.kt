@@ -127,8 +127,8 @@ class MainFragment : Fragment() {
             glVertexAttribPointer(positionLocation, 2, GL_FLOAT, false, 0, verticesBuffer)
             glEnableVertexAttribArray(positionLocation)
 
-            texId1 = createTex(mGifTexImage2D, 1)
-            //texId2 = createTex(mGifTexImage2D1, 1)
+            texId1 = createTex(mGifTexImage2D, 0)
+            texId2 = createTex(mGifTexImage2D1, 1)
 
         }
 
@@ -150,8 +150,7 @@ class MainFragment : Fragment() {
                     GL_UNSIGNED_BYTE,
                     null
             )
-            //glBindTexture(GL_TEXTURE_2D, 0)
-            //glActiveTexture(GL_TEXTURE)
+            glBindTexture(GL_TEXTURE_2D, 0)
             return texNames[0]
         }
 
@@ -165,13 +164,13 @@ class MainFragment : Fragment() {
         }
 
         override fun onDrawFrame(gl: GL10) {
-            glActiveTexture(GL_TEXTURE1)
-            //glBindTexture(GL_TEXTURE_2D, texId1)
-            mGifTexImage2D.glTexSubImage2D(GL_TEXTURE_2D,GL_TEXTURE1)
+            glActiveTexture(GL_TEXTURE0)
+            glBindTexture(GL_TEXTURE_2D, texId1)
+            mGifTexImage2D.glTexSubImage2D(GL_TEXTURE_2D,0)
 
-            /*glActiveTexture(GL_TEXTURE1)
+            glActiveTexture(GL_TEXTURE1)
             glBindTexture(GL_TEXTURE_2D, texId2)
-            mGifTexImage2D1.glTexSubImage2D(GL_TEXTURE_2D,1)*/
+            mGifTexImage2D1.glTexSubImage2D(GL_TEXTURE_2D,1)
 
             glUniform1i(textureLocation, 0)
 
